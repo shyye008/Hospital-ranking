@@ -2,7 +2,7 @@ rm(list=ls())
 library(lme4)
 #############################################################
 # Read bootstrap HCA data set
-dat<-read.csv("Bootstrap data.csv")
+dat<-read.csv("Simulated Data.csv")
 attach(dat)
 ID<-ID
 bmi<-ifelse(dat$bmi>=30,1,0)
