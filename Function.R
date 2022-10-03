@@ -53,5 +53,5 @@ sim_ranking<-function(K=1000,fmla,ID,X,beta_hat,alpha,sigma_alpha){
     power<-c(power,TP/(TP+FN));FPR<-c(FPR,FP/(FP+TN))
     PPV<-c(PPV,TP/(TP+FP));NPV<-c(NPV,TN/(FN+TN))
   }
-  cbind(power,FPR,PPV,NPV)
+  cbind(unique(ID),power,FPR,PPV,NPV)
 }
