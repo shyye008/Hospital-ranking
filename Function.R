@@ -18,10 +18,10 @@ sim_ranking<-function(K=1000,fmla,ID,X,beta_hat,alpha,sigma_alpha){
     T_rank<-rbind(T_rank,TR1)
     
     # Simulate outcome y
-    lr<-c();h<-1
+    lr<-rep(NA,N);h<-1
     for (j in unique(ID)) {
       lrj<-alphai[h]+as.matrix(X)[ID==j,]%*%beta_hat
-      lr<-c(lr,lrj)
+      lr[ID==j]<-lrj
       h<-h+1
     }
     p<-exp(lr)/(1+exp(lr))
@@ -31,10 +31,10 @@ sim_ranking<-function(K=1000,fmla,ID,X,beta_hat,alpha,sigma_alpha){
     # Calculate SIRs and estimated ranks
     fit<-glm(fmla,data=dats,family=binomial)
     SIR<-c()
-    for (i in unique(ID)) {
-      dati<-dats[which(dats$ID==i),]
-      O<-sum(dati$y)
-      E<-sum(predict(fit,newdata=dati,type="response"))
+    for (j in unique(ID)) {
+      datj<-dats[which(dats$ID==j),]
+      O<-sum(datj$y)
+      E<-sum(predict(fit,newdata=datj,type="response"))
       SIR<-c(SIR,O/E)
     }
     sir3<-quantile(SIR,0.75)
@@ -44,7 +44,7 @@ sim_ranking<-function(K=1000,fmla,ID,X,beta_hat,alpha,sigma_alpha){
   
   # Calculate power, FPR, PPV, and NPV
   power<-c();FPR<-c();PPV<-c();NPV<-c()
-  for (i in unique(ID)) {
+  for (i in 1:m) {
     simi<-cbind(T_rank[,i],E_rank[,i])
     TP<-sum(ifelse(simi[,1]==1 & simi[,2]==1,1,0))
     FP<-sum(ifelse(simi[,1]==0 & simi[,2]==1,1,0))
